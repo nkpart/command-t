@@ -37,23 +37,24 @@ module CommandT
     end
 
     def show_buffer_finder
-      @path          = VIM::pwd
-      @active_finder = buffer_finder
-      show
+      show_finder(buffer_finder)
     end
 
     def show_jump_finder
-      @path          = VIM::pwd
-      @active_finder = jump_finder
+      show_finder(jump_finder)
+    end
+
+    def show_finder(finder, path = VIM::pwd)
+      @path = path
+      @active_finder = finder
       show
     end
 
     def show_file_finder
       # optional parameter will be desired starting directory, or ""
-      @path             = File.expand_path(::VIM::evaluate('a:arg'), VIM::pwd)
-      @active_finder    = file_finder
-      file_finder.path  = @path
-      show
+      path = File.expand_path(::VIM::evaluate('a:arg'), VIM::pwd)
+      file_finder.path = path
+      show_finder(file_finder, path) 
     rescue Errno::ENOENT
       # probably a problem with the optional parameter
       @match_window.print_no_such_file_or_directory
@@ -104,7 +105,13 @@ module CommandT
     def accept_selection options = {}
       selection = @match_window.selection
       hide
-      open_selection(selection, options) unless selection.nil?
+      if selection
+        if @active_finder.respond_to?(:open_selection)
+          @active_finder.open_selection(selection, options)
+        else
+          open_selection(selection, options) 
+        end
+      end
     end
 
     def toggle_focus
