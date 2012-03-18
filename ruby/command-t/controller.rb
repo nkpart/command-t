@@ -114,13 +114,7 @@ module CommandT
     def accept_selection options = {}
       selection = @match_window.selection
       hide
-      if selection
-        if @active_finder.respond_to?(:open_selection)
-          @active_finder.open_selection(selection, options)
-        else
-          open_selection(selection, options) 
-        end
-      end
+      open_selection(selection, options) unless selection.nil?
     end
 
     def toggle_focus
