@@ -22,7 +22,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'spec_helper'
-require 'command-t/finder/buffer_finder'
 
 module VIM; end
 

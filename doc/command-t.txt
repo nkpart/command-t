@@ -345,26 +345,6 @@ COMMANDS                                        *command-t-commands*
                 current working directory as returned by the|:pwd|
                 command.
 
-                                                *:CommandTBuffer*
-|:CommandTBuffer|Brings up the Command-T buffer window.
-                This works exactly like the standard file window,
-                except that the selection is limited to files that
-                you already have open in buffers.
-
-                                                *:CommandTJumps*
-|:CommandTJump| Brings up the Command-T jumplist window.
-                This works exactly like the standard file window,
-                except that the selection is limited to files that
-                you already have in the jumplist. Note that jumps
-                can persist across Vim sessions (see Vim's |jumplist|
-                documentation for more info).
-
-                                                *:CommandTTag*
-|:CommandTTag| Brings up the Command-T window tags window, which can
-                be used to select from the tags, if any, returned by
-                Vim's |taglist()| function. See Vim's |tag| documentation
-                for general info on tags.
-
                                                 *:CommandTFlush*
 |:CommandTFlush|Instructs the plug-in to flush its path cache, causing
                 the directory to be rescanned for new or deleted paths
@@ -381,7 +361,6 @@ MAPPINGS                                        *command-t-mappings*
 By default Command-T comes with only two mappings:
 
   <Leader>t     bring up the Command-T file window
-  <Leader>b     bring up the Command-T buffer window
 
 However, Command-T won't overwrite a pre-existing mapping so if you prefer
 to define different mappings use lines like these in your ~/.vimrc:

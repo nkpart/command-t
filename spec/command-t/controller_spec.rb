@@ -37,27 +37,6 @@ describe CommandT::Controller do
       stub_prompt
       stub_vim '/working/directory'
     end
-
-    it 'opens relative paths inside the working directory' do
-      stub(::VIM).evaluate('a:arg').returns('')
-      controller.show_file_finder
-      mock(::VIM).command('silent e path/to/selection')
-      controller.accept_selection
-    end
-
-    it 'opens absolute paths outside the working directory' do
-      stub(::VIM).evaluate('a:arg').returns('../outside')
-      controller.show_file_finder
-      mock(::VIM).command('silent e /working/outside/path/to/selection')
-      controller.accept_selection
-    end
-
-    it 'does not get confused by common directory prefixes' do
-      stub(::VIM).evaluate('a:arg').returns('../directory-oops')
-      controller.show_file_finder
-      mock(::VIM).command('silent e /working/directory-oops/path/to/selection')
-      controller.accept_selection
-    end
   end
 
   def check_ruby_1_9_2

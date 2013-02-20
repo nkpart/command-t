@@ -27,20 +27,6 @@ if exists("g:command_t_loaded") || &cp
 endif
 let g:command_t_loaded = 1
 
-command CommandTBuffer call <SID>CommandTShowBufferFinder()
-command CommandTJump call <SID>CommandTShowJumpFinder()
-command CommandTTag call <SID>CommandTShowTagFinder()
-command -nargs=? -complete=dir CommandT call <SID>CommandTShowFileFinder(<q-args>)
-command CommandTFlush call <SID>CommandTFlush()
-
-if !hasmapto(':CommandT<CR>')
-  silent! nnoremap <unique> <silent> <Leader>t :CommandT<CR>
-endif
-
-if !hasmapto(':CommandTBuffer<CR>')
-  silent! nnoremap <unique> <silent> <Leader>b :CommandTBuffer<CR>
-endif
-
 function s:CommandTRubyWarning()
   echohl WarningMsg
   echo "command-t.vim requires Vim to be compiled with Ruby support"
@@ -48,47 +34,8 @@ function s:CommandTRubyWarning()
   echohl none
 endfunction
 
-function s:CommandTShowBufferFinder()
-  if has('ruby')
-    ruby $command_t.show_buffer_finder
-  else
-    call s:CommandTRubyWarning()
-  endif
-endfunction
-
-function s:CommandTShowFileFinder(arg)
-  if has('ruby')
-    ruby $command_t.show_file_finder
-  else
-    call s:CommandTRubyWarning()
-  endif
-endfunction
-
-function s:CommandTShowJumpFinder()
-  if has('ruby')
-    ruby $command_t.show_jump_finder
-  else
-    call s:CommandTRubyWarning()
-  endif
-endfunction
-
-function s:CommandTShowTagFinder()
-  if has('ruby')
-    ruby $command_t.show_tag_finder
-  else
-    call s:CommandTRubyWarning()
-  endif
-endfunction
-
-function s:CommandTFlush()
-  if has('ruby')
-    ruby $command_t.flush
-  else
-    call s:CommandTRubyWarning()
-  endif
-endfunction
-
 if !has('ruby')
+  call s:CommandTRubyWarning()
   finish
 endif
 

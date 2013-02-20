@@ -21,10 +21,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-require 'command-t/finder/buffer_finder'
-require 'command-t/finder/jump_finder'
-require 'command-t/finder/file_finder'
-require 'command-t/finder/tag_finder'
+require 'command-t/ext'
 require 'command-t/match_window'
 require 'command-t/prompt'
 require 'command-t/vim/path_utilities'
@@ -37,34 +34,10 @@ module CommandT
       @prompt = Prompt.new
     end
 
-    def show_buffer_finder
-      show_finder(buffer_finder)
-    end
-
-    def show_jump_finder
-      show_finder(jump_finder)
-    end
-
     def show_finder(finder, path = VIM::pwd)
       @path = path
       @active_finder = finder
       show
-    end
-
-    def show_tag_finder
-      @path          = VIM::pwd
-      @active_finder = tag_finder
-      show
-    end
-
-    def show_file_finder
-      # optional parameter will be desired starting directory, or ""
-      path = File.expand_path(::VIM::evaluate('a:arg'), VIM::pwd)
-      file_finder.path = path
-      show_finder(file_finder, path) 
-    rescue Errno::ENOENT
-      # probably a problem with the optional parameter
-      @match_window.print_no_such_file_or_directory
     end
 
     def hide
@@ -89,8 +62,6 @@ module CommandT
     def flush
       @max_height   = nil
       @min_height   = nil
-      @file_finder  = nil
-      @tag_finder   = nil
     end
 
     def handle_key
@@ -330,29 +301,6 @@ module CommandT
     def list_matches
       matches = @active_finder.sorted_matches_for @prompt.abbrev, :limit => match_limit
       @match_window.matches = matches
-    end
-
-    def buffer_finder
-      @buffer_finder ||= CommandT::BufferFinder.new
-    end
-
-    def file_finder
-      @file_finder ||= CommandT::FileFinder.new nil,
-        :max_depth              => get_number('g:CommandTMaxDepth'),
-        :max_files              => get_number('g:CommandTMaxFiles'),
-        :max_caches             => get_number('g:CommandTMaxCachedDirectories'),
-        :always_show_dot_files  => get_bool('g:CommandTAlwaysShowDotFiles'),
-        :never_show_dot_files   => get_bool('g:CommandTNeverShowDotFiles'),
-        :scan_dot_directories   => get_bool('g:CommandTScanDotDirectories')
-    end
-
-    def jump_finder
-      @jump_finder ||= CommandT::JumpFinder.new
-    end
-
-    def tag_finder
-      @tag_finder ||= CommandT::TagFinder.new \
-        :include_filenames => get_bool('g:CommandTTagIncludeFilenames')
     end
   end # class Controller
 end # module commandT
