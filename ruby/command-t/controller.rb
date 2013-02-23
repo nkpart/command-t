@@ -24,12 +24,9 @@
 require 'command-t/ext'
 require 'command-t/match_window'
 require 'command-t/prompt'
-require 'command-t/vim/path_utilities'
 
 module CommandT
   class Controller
-    include VIM::PathUtilities
-
     def initialize
       @prompt = Prompt.new
     end
@@ -302,5 +299,13 @@ module CommandT
       matches = @active_finder.sorted_matches_for @prompt.abbrev, :limit => match_limit
       @match_window.matches = matches
     end
+
+
+      def relative_path_under_working_directory path
+        # any path under the working directory will be specified as a relative
+        # path to improve the readability of the buffer list etc
+        pwd = File.expand_path(VIM::pwd) + '/'
+        path.index(pwd) == 0 ? path[pwd.length..-1] : path
+      end
   end # class Controller
 end # module commandT
